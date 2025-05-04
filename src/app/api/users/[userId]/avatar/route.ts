@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import User from "@/lib/roconomy";
 
 export async function GET(request: Request, params: any) {
-    const { userId } = await params;
+    const userId = await params.userId;
     const image = await User.GetUserAvatar(parseInt(userId), false);
     return new NextResponse(image, {
         headers: {

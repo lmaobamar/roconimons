@@ -6,9 +6,9 @@ const CACHE_DURATION = 60 * 1000;
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: Request, params: any) {
-    const assetId = await params.assetId;
-
+export async function GET(req: Request, { params }: any) {
+    const assetId = parseInt(params.assetId);
+    
     try {
         const cached = cache.get(assetId);
         const now = Date.now();
@@ -23,7 +23,6 @@ export async function GET(req: Request, params: any) {
                 },
             });
         }
-
         const image = await User.GetAssetImage(assetId);
         cache.set(assetId, { data: image, timestamp: now });
 
@@ -37,6 +36,7 @@ export async function GET(req: Request, params: any) {
             },
         });
     } catch (error) {
+        console.error('Error fetching asset image:', error);
         return new NextResponse(null, {
             status: 500,
             headers: {
