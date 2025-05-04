@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import User from "@/lib/roconomy";
 
 const cache = new Map<number, { data: Buffer, timestamp: number }>();
@@ -6,14 +7,8 @@ const CACHE_DURATION = 60 * 1000;
 
 export const dynamic = 'force-dynamic';
 
-interface RouteParams {
-    params: {
-        assetId: string;
-    };
-}
-
-export async function GET(_req: Request, context: RouteParams) {
-    const assetId = Number(context.params.assetId);
+export async function GET(req: NextRequest, { params }: { params: { assetId: string } }) {
+    const assetId = Number(params.assetId);
 
     try {
         const cached = cache.get(assetId);
