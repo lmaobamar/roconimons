@@ -6,7 +6,7 @@ const CACHE_DURATION = 60 * 1000;
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: Request, { params }: { params: { assetId: string } }) {
+export async function GET(req: Request, { params }: { params: { assetId: any } }) {
     const assetId = Number(params.assetId);
 
     try {
