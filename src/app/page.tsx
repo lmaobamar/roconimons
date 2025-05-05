@@ -2,82 +2,73 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Hat from "@/components/hat";
 import roconomy from "@/lib/roconomy";
-import { Separator } from "@/components/ui/separator";
-
-const cardFrameStyle: React.CSSProperties = {
-  background: "#161b21",
-  borderRadius: "18px",
-  padding: "28px 24px",
-  boxShadow: "0 4px 24px rgba(0,0,0,0.18)",
-  marginBottom: "32px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "flex-start",
-};
 
 export default async function Home() {
   const LatestLimiteds = await roconomy.GetLatestLimiteds();
-  const LatestRobloxHats = await roconomy.GetLatestRobloxHats();
+  const LatestRobloxHats = (await roconomy.GetLatestRobloxHats()).slice(0, 7);
+
   return (
     <main className={styles.main}>
-      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "100vh", width: "100%" }}>
-        <div style={{ width: "fit-content", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-          <div style={{ textAlign: "left", marginBottom: "20px" }}>
-            <h1 style={{ fontSize: "4rem", color: "#fff" }}>Roconimons</h1>
-            <p style={{ fontSize: "2rem", color: "#fff" }}>Rolimon's but for RoConomy</p>
-            <p className="text-muted" style={{ fontSize: "1rem", color: "#fff" }}>this is so unfinished pls dont cry</p>
-          </div>
-          <div style={{ ...cardFrameStyle, width: "fit-content" }}>
-            <div style={{ textAlign: "left", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "2rem", color: "#fff" }}>Latest Limiteds</h2>
-            </div>
-            <div style={{ display: "flex", flexWrap: "nowrap", gap: "20px", overflowX: "auto" }}>
-              {LatestLimiteds.map((item) => {
-                let price = item.lowestPrice != null ? item.lowestPrice.toString() : item.price?.toString() ?? "";
-                if (price.length > 12) {
-                  price = price.slice(0, 12) + "...";
-                }
-                const canBuy = item.isForSale || item.lowestPrice != null;
-                return (
-                  <Hat
-                    key={item.id}
-                    ItemId={item.id}
-                    ItemName={item.name}
-                    Creator={item.creatorName}
-                    Price={price}
-                    LimitedType={item.isLimited ? (item.isLimitedUnique ? "LimitedUnique" : "Limited") : null}
-                    Onsale={canBuy}
-                  />
-                );
-              })}
-            </div>
-          </div>
-          <div style={{ ...cardFrameStyle, width: "100%" }}>
-            <div style={{ textAlign: "left", marginBottom: "20px" }}>
-              <h2 style={{ fontSize: "2rem", color: "#fff" }}>Latest Roblox Hats</h2>
-            </div>
-            <div style={{ display: "flex", flexWrap: "nowrap", gap: "20px", overflowX: "auto" }}>
-              {LatestRobloxHats.map((item) => {
-                let price = item.price != null ? item.price.toString() : "";
-                if (price.length > 12) {
-                  price = price.slice(0, 12) + "...";
-                }
-                const canBuy = item.isForSale || item.lowestPrice != null;
-                return (
-                  <Hat
-                    key={item.id}
-                    ItemId={item.id}
-                    ItemName={item.name}
-                    Creator={item.creatorName}
-                    Price={price}
-                    LimitedType={item.isLimited ? (item.isLimitedUnique ? "LimitedUnique" : "Limited") : null}
-                    Onsale={canBuy}
-                  />
-                );
-              })}
-            </div>
-          </div>
+      <div className="bg-gray-900" style={{ padding: "24px", width: "100%", maxWidth: "100%", boxSizing: "border-box" }}>
+        <div style={{ marginBottom: "32px" }}>
+          <h1 style={{ fontSize: "2.5rem", color: "#fff", marginBottom: "8px" }}>Roconimons</h1>
+          <p style={{ fontSize: "1.25rem", color: "#fff", marginBottom: "4px" }}>Rolimon's but for RoConomy</p>
+          <p style={{ fontSize: "0.875rem", color: "#aaa" }}>this is so unfinished pls dont cry</p>
         </div>
+
+        <section style={{ marginBottom: "40px" }}>
+          <h2 style={{ fontSize: "1.5rem", color: "#fff", marginBottom: "16px" }}>Latest Limiteds</h2>
+          <p style={{ fontSize: "0.875rem", color: "#aaa", marginBottom: "16px" }}>
+            Last checked: {new Date().toLocaleString()}
+          </p>
+          <div style={{ display: "flex", overflowX: "auto", gap: "16px", paddingBottom: "8px" }}>
+            {LatestLimiteds.map((item) => {
+              let price = item.lowestPrice != null ? item.lowestPrice.toString() : item.price?.toString() ?? "";
+              if (price.length > 12) {
+                price = price.slice(0, 12) + "...";
+              }
+              const canBuy = item.isForSale || item.lowestPrice != null;
+              return (
+                <Hat
+                  key={item.id}
+                  ItemId={item.id}
+                  ItemName={item.name}
+                  Creator={item.creatorName}
+                  Price={price}
+                  LimitedType={item.isLimited ? (item.isLimitedUnique ? "LimitedUnique" : "Limited") : null}
+                  Onsale={canBuy}
+                />
+              );
+            })}
+          </div>
+        </section>
+
+        <section>
+          <h2 style={{ fontSize: "1.5rem", color: "#fff", marginBottom: "8px" }}>Latest Roblox Hats</h2>
+          <p style={{ fontSize: "0.875rem", color: "#aaa", marginBottom: "16px" }}>
+            Last checked: {new Date().toLocaleString()}
+          </p>
+          <div style={{ display: "flex", overflowX: "auto", gap: "16px", paddingBottom: "8px" }}>
+            {LatestRobloxHats.map((item) => {
+              let price = item.price != null ? item.price.toString() : "";
+              if (price.length > 12) {
+                price = price.slice(0, 12) + "...";
+              }
+              const canBuy = item.isForSale || item.lowestPrice != null;
+              return (
+                <Hat
+                  key={item.id}
+                  ItemId={item.id}
+                  ItemName={item.name}
+                  Creator={item.creatorName}
+                  Price={price}
+                  LimitedType={item.isLimited ? (item.isLimitedUnique ? "LimitedUnique" : "Limited") : null}
+                  Onsale={canBuy}
+                />
+              );
+            })}
+          </div>
+        </section>
       </div>
     </main>
   );

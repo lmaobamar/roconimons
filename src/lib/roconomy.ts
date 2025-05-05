@@ -114,6 +114,21 @@ export type InventoryItem = {
     UserItem: Record<string, unknown>;
 }
 
+export type ResaleInfo = {
+    assetStock: number;
+    sales: number;
+    numberRemaining: number;
+    recentAveragePrice: number;
+    priceDataPoints: {
+        value: number;
+        date: string;
+    }[];
+    volumeDataPoints: {
+        value: number;
+        date: string;
+    }[];
+};
+
 /**
  * Retrieves user information from RoConomy.
  * @param id - The unique numeric ID of the user.
@@ -188,16 +203,28 @@ async function GetLatestLimiteds() {
  * @returns An array of AssetDetails objects containing information about the latest Roblox hats.
  */
 async function GetLatestRobloxHats() {
-    const latest_hats_res = await axios.get("https://rocono.xyz/users/inventory/list-json?userId=1&assetTypeId=8&cursor=", UserAgent);
-    const latest_hats = latest_hats_res.data as InventoryAPIData;
-    const latest_hats_items = latest_hats.Data.Items as InventoryItem[];
+    let allHats: InventoryItem[] = [];
+    let nextPageCursor: string | null = null;
 
-    const ids = latest_hats_items.map((item) => item.Item.AssetId);
+    do {
+        const url = `https://rocono.xyz/users/inventory/list-json?userId=1&assetTypeId=8&cursor=${nextPageCursor || ""}`;
+        const response = await axios.get(url, UserAgent);
+        const data = response.data as InventoryAPIData;
+
+        if (data.IsValid) {
+            allHats.push(...data.Data.Items);
+            nextPageCursor = data.Data.nextPageCursor;
+        } else {
+            break;
+        }
+    } while (nextPageCursor);
+
+    const ids = allHats.map((item) => item.Item.AssetId);
 
     const item_info_res = await axios.get(`https://rocono.xyz/apisite/catalog/v1/catalog/items/details?assetIds=${ids.join(",")}`, UserAgent);
     const item_info = item_info_res.data.data as AssetDetails[];
 
-    const latest_hats_info = latest_hats_items.map((item) => {
+    const latest_hats_info = allHats.map((item) => {
         const info = item_info.find((info) => info.id === item.Item.AssetId);
         return {
             id: item.Item.AssetId,
@@ -214,10 +241,39 @@ async function GetLatestRobloxHats() {
     return latest_hats_info;
 }
 
+async function GetAssetInfo(id: number) {
+    const url = `https://rocono.xyz/apisite/catalog/v1/catalog/items/details?assetIds=${id}`;
+    const response = await axios.get(url, UserAgent);
+    if (response.data.data.length === 0) {
+        throw new Error(`Asset not found`);
+    }
+    if (response.status !== 200) {
+        throw new Error(`Failed to fetch asset info: ${response.statusText}`);
+    }
+    const info = response.data.data[0] as AssetDetails;
+    return info;
+}
+
+async function GetResaleInfo(id: number) {
+    // https://rocono.xyz/apisite/economy/v1/assets/277/resale-data
+
+    const url = `https://rocono.xyz/apisite/economy/v1/assets/${id}/resale-data`;
+    const response = await axios.get(url, UserAgent);
+
+    if (response.status !== 200) {
+        throw new Error(`Failed to fetch resale info: ${response.statusText}`);
+    }
+
+    const info = response.data as ResaleInfo;
+    return info;
+}
+
 export default {
     GetUser,
     GetUserAvatar,
     GetAssetImage,
     GetLatestLimiteds,
     GetLatestRobloxHats,
+    GetAssetInfo,
+    GetResaleInfo,
 }

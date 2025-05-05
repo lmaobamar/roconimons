@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Roconimons",
-  description: "Rolimons but for RoConomy",
+  description: "Rolimon's but for RoConomy",
 };
 
 export default function RootLayout({

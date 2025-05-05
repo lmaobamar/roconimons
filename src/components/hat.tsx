@@ -103,13 +103,13 @@ function Hat({ ItemId, ItemName, Creator, Price, LimitedType, Onsale, isLoading 
                     </p>
                 )}
                 {LimitedType === "Limited" && (
-                    <p className="flex items-center gap-1 text-yellow-400 font-semibold pl-1">
+                    <p className="flex items-center gap-1 text-green-400 font-semibold pl-1">
                         <Layers className="w-4 h-4 mr-2" />
                         <span>Limited</span>
                     </p>
                 )}
                 {LimitedType === "LimitedUnique" && (
-                    <p className="flex items-center gap-1 text-pink-500 font-semibold pl-1">
+                    <p className="flex items-center gap-1 text-yellow-400 font-semibold pl-1">
                         <Layers className="w-4 h-4 mr-2" />
                         <span>Limited Unique</span>
                     </p>
