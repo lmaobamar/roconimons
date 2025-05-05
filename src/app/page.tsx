@@ -3,6 +3,9 @@ import styles from "./page.module.css";
 import Hat from "@/components/hat";
 import roconomy from "@/lib/roconomy";
 
+// TODO: make it so data is fetched every refresh, server-side, not bundled in the build
+
+
 export default async function Home() {
   const LatestLimiteds = await roconomy.GetLatestLimiteds();
   const LatestRobloxHats = (await roconomy.GetLatestRobloxHats()).slice(0, 7);
