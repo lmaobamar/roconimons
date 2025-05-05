@@ -5,7 +5,7 @@ import roconomy from "@/lib/roconomy";
 import { Separator } from "@/components/ui/separator";
 
 const cardFrameStyle: React.CSSProperties = {
-  background: "#23272f",
+  background: "#161b21",
   borderRadius: "18px",
   padding: "28px 24px",
   boxShadow: "0 4px 24px rgba(0,0,0,0.18)",

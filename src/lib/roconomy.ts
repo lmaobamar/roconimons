@@ -114,6 +114,11 @@ export type InventoryItem = {
     UserItem: Record<string, unknown>;
 }
 
+/**
+ * Retrieves user information from RoConomy.
+ * @param id - The unique numeric ID of the user.
+ * @returns A Promise that resolves to a User object containing the user's information.
+ */
 async function GetUser(id: number): Promise<User> {
     const url = `https://rocono.xyz/apisite/users/v1/users/${id}`;
     const response = await axios.get(url, UserAgent);
@@ -147,6 +152,11 @@ async function GetUserAvatar(id: number, headshot: boolean) {
     return imageBuffer;
 }
 
+/**
+ * Retrieves an asset's Image from RoConomy.
+ * @param id - The unique numeric ID of the asset.
+ * @returns A PNG image as a Buffer.
+ */
 async function GetAssetImage(id: number) {
     const url = `https://rocono.xyz/Thumbs/Asset.ashx?assetId=${id}`;
     const response = await axios.get(url, {
@@ -157,6 +167,10 @@ async function GetAssetImage(id: number) {
     return imageBuffer;
 }
 
+/**
+ * Retrieves the latest limited items from RoConomy.
+ * @returns An array of AssetDetails objects containing information about the latest limited items.
+ */
 async function GetLatestLimiteds() {
     const latest_lims_res = await axios.get("https://rocono.xyz/apisite/catalog/v1/search/items?category=Collectibles&limit=7&sortType=0" ,UserAgent);
     const latest_lims = latest_lims_res.data.data as AssetInfo[];
@@ -169,8 +183,12 @@ async function GetLatestLimiteds() {
     return item_info;
 }
 
+/**
+ * Retrieves the latest Roblox hats from RoConomy.
+ * @returns An array of AssetDetails objects containing information about the latest Roblox hats.
+ */
 async function GetLatestRobloxHats() {
-    const latest_hats_res = await axios.get("https://rocono.xyz/users/inventory/list-json?userId=1&assetTypeId=8&cursor=&itemsPerPage=7", UserAgent);
+    const latest_hats_res = await axios.get("https://rocono.xyz/users/inventory/list-json?userId=1&assetTypeId=8&cursor=", UserAgent);
     const latest_hats = latest_hats_res.data as InventoryAPIData;
     const latest_hats_items = latest_hats.Data.Items as InventoryItem[];
 
