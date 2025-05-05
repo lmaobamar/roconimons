@@ -1,7 +1,7 @@
 import roconomy from "@/lib/roconomy";
 import AssetPageClient from "./client";
 
-export default async function AssetPage({ params }: { params: { assetId: string } }) {
+export default async function AssetPage({ params }: any) {
     const assetId = parseInt((await params).assetId, 10);
 
     if (Number.isNaN(assetId)) {
