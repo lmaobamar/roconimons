@@ -2,7 +2,7 @@ import roconomy from "@/lib/roconomy";
 import AssetPageClient from "./client";
 
 export default async function AssetPage({ params }: { params: { assetId: string } }) {
-    const assetId = parseInt(params.assetId, 10);
+    const assetId = parseInt((await params).assetId, 10);
 
     if (Number.isNaN(assetId)) {
         return <h1 className="text-red-500">Invalid asset ID</h1>;
