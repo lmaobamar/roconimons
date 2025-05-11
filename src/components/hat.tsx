@@ -1,4 +1,9 @@
 "use client"
+/*
+    * I lost my mind coding this component
+    * This is spaghetti code
+    * You have been warned
+*/
 import {
     Card,
     CardContent,
